@@ -16,8 +16,8 @@ func NewMessageBridgeService() *MessageBridgeService {
 }
 
 func (messageBridgeService *MessageBridgeService) Process(messageContract *contracts.BridgeMessageContract) error {
-
 	messageContract.Type = getParseType()
+	messageContract.RoutingKey = getRoutingKey()
 	err := messageBridgeService.hub.ProcessByMessageType(messageContract)
 	if err != nil {
 		return err
@@ -27,4 +27,8 @@ func (messageBridgeService *MessageBridgeService) Process(messageContract *contr
 
 func getParseType() string {
 	return "SendNetmonHub"
+}
+
+func getRoutingKey() string {
+	return "netmon"
 }

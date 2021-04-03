@@ -21,4 +21,5 @@ type BridgeMessageContract struct {
 	Message     string                   `json:"message"`
 	EvalMatches []map[string]interface{} `json:"evalMatches"`
 	Type        string
+	RoutingKey  string
 }

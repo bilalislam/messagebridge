@@ -35,19 +35,19 @@ func (hub *Hub) ProcessByMessageType(messageContract *contracts.BridgeMessageCon
 
 	processResult := currentHub.Transmit(messageContract, &contracts.HubConfiguration{
 		BrokerConfiguration: contracts.BrokerConfiguration{
-			Nodes:        nil,
-			ExchangeName: "",
-			ExchangeType: "",
-			QueueName:    "",
-			Durable:      false,
+			Nodes: []string{
+				"localhost:5672",
+			},
+			ExchangeName: "noc-tools",
+			ExchangeType: "topic",
+			Durable:      true,
 			AutoDelete:   false,
 			Internal:     false,
 			NoWait:       false,
-			RoutingKey:   "",
+			RoutingKey:   messageContract.RoutingKey,
 			Mandatory:    false,
 			Immediate:    false,
-			ContentType:  "",
-			DeliveryMode: "",
+			ContentType:  "application/json",
 		},
 	})
 

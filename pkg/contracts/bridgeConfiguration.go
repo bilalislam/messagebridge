@@ -17,5 +17,4 @@ type BrokerConfiguration struct {
 	Mandatory    bool     `json:"Mandatory"`
 	Immediate    bool     `json:"Immediate"`
 	ContentType  string   `json:"Content-Type"`
-	DeliveryMode string   `json:"DeliveryMode"`
 }
