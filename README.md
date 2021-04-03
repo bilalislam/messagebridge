@@ -4,7 +4,7 @@
 # grafana-webhook
 grafana-webhook provides an easy way to write go http handlers for webhook channels
 
-## Usage example
+## usage example
 Handle Grafana request and send a message by a service:
 
 ```go
@@ -37,3 +37,8 @@ func main() {
 ```
 
 Above listener can be used to fill the url input in [Grafana Webhook notification channel](http://docs.grafana.org/alerting/notifications/#webhook).
+
+## known issues
+1. swagger
+2. docker compose - rabbitmq,grafana,k8s scripts
+3. config and logging
