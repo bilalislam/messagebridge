@@ -16,5 +16,11 @@ func NewSendAnakinHub(rabbitMqClient *infrastructure.RabbitMqClient) *SendAnakin
 }
 
 func (hub *SendAnakinHub) Transmit(message *contracts.BridgeMessageContract, hubConfiguration *contracts.HubConfiguration) error {
+	hub.rabbitMqClient.Publish(&hubConfiguration.BrokerConfiguration, &AnakinCommand{
+
+	})
 	return nil
+}
+
+type AnakinCommand struct {
 }

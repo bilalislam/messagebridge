@@ -16,5 +16,12 @@ func NewSendNetmonHub(rabbitMqClient *infrastructure.RabbitMqClient) *SendNetmon
 }
 
 func (hub *SendNetmonHub) Transmit(message *contracts.BridgeMessageContract, hubConfiguration *contracts.HubConfiguration) error {
+
+	hub.rabbitMqClient.Publish(&hubConfiguration.BrokerConfiguration, &NetmonCommand{
+
+	})
 	return nil
+}
+
+type NetmonCommand struct {
 }

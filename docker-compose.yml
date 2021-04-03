@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  messagebridge:
+    build:
+      context: tools/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      ENV_FILE: dev
+
+  rabbitmq:
+    image: rabbitmq:3.6.4-management
+    hostname: rabbitmq
+    expose:
+      - "9090"
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
+      - "25672:25672"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"

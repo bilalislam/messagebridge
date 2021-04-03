@@ -28,9 +28,9 @@ func NewHub() *Hub {
 
 //Todo: hubConfiguration must be dynamic and get from config db which run as sidecar
 func (hub *Hub) ProcessByMessageType(messageContract *contracts.BridgeMessageContract) error {
-	currentHub, exists := hub.hubs[messageContract.Payload.Type]
+	currentHub, exists := hub.hubs[messageContract.Type]
 	if !exists {
-		return errors.New("Hub could not be found for [Type]: " + messageContract.Payload.Type)
+		return errors.New("Hub could not be found for [Type]: " + messageContract.Type)
 	}
 
 	processResult := currentHub.Transmit(messageContract, &contracts.HubConfiguration{

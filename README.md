@@ -37,6 +37,8 @@ func main() {
 ```
 
 Above listener can be used to fill the url input in [Grafana Webhook notification channel](http://docs.grafana.org/alerting/notifications/#webhook).
+Please look at [Message Bridge from Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessagingBridge.html).
+
 
 ## known issues
 1. swagger

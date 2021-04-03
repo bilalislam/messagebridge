@@ -16,9 +16,15 @@ func NewMessageBridgeService() *MessageBridgeService {
 }
 
 func (messageBridgeService *MessageBridgeService) Process(messageContract *contracts.BridgeMessageContract) error {
+
+	messageContract.Type = getParseType()
 	err := messageBridgeService.hub.ProcessByMessageType(messageContract)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func getParseType() string {
+	return "SendNetmonHub"
 }

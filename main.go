@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"webhook/pkg/contracts"
-	"webhook/services"
+	"webhook/pkg/services"
 )
 
 func main() {
