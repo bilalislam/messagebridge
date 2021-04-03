@@ -16,6 +16,9 @@ func NewMessageBridgeService() *MessageBridgeService {
 }
 
 func (messageBridgeService *MessageBridgeService) Process(messageContract *contracts.BridgeMessageContract) error {
-
+	err := messageBridgeService.hub.ProcessByMessageType(messageContract)
+	if err != nil {
+		return err
+	}
 	return nil
 }

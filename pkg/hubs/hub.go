@@ -1,6 +1,7 @@
 package hubs
 
 import (
+	"errors"
 	"webhook/pkg/contracts"
 	"webhook/pkg/infrastructure"
 )
@@ -15,9 +16,45 @@ type Hub struct {
 }
 
 func NewHub() *Hub {
-	rabbitMqClient := infrastructure.NewRabbitMqClient()
+	rabbitMqClient := infrastructure.NewRabbitMqClient(nil)
 	return &Hub{
-		hubs:           nil,
+		hubs: map[string]IHub{
+			"SendNetmonHub": NewSendNetmonHub(rabbitMqClient),
+			"SendAnakinHub": NewSendAnakinHub(rabbitMqClient),
+		},
 		rabbitMqClient: rabbitMqClient,
 	}
+}
+
+//Todo: hubConfiguration must be dynamic and get from config db which run as sidecar
+func (hub *Hub) ProcessByMessageType(messageContract *contracts.BridgeMessageContract) error {
+	currentHub, exists := hub.hubs[messageContract.Payload.Type]
+	if !exists {
+		return errors.New("Hub could not be found for [Type]: " + messageContract.Payload.Type)
+	}
+
+	processResult := currentHub.Transmit(messageContract, &contracts.HubConfiguration{
+		BrokerConfiguration: contracts.BrokerConfiguration{
+			Nodes:        nil,
+			ExchangeName: "",
+			ExchangeType: "",
+			QueueName:    "",
+			Durable:      false,
+			AutoDelete:   false,
+			Internal:     false,
+			NoWait:       false,
+			RoutingKey:   "",
+			Mandatory:    false,
+			Immediate:    false,
+			ContentType:  "",
+			DeliveryMode: "",
+		},
+	})
+
+	if processResult != nil {
+		return processResult
+	}
+
+	return nil
+
 }

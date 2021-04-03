@@ -1,9 +1,10 @@
-# grafana-webhook
+# Overview Architecture
+![Image alt text](./images/MessagingBridge.gif)
 
+# grafana-webhook
 grafana-webhook provides an easy way to write go http handlers for webhook channels
 
 ## Usage example
-
 Handle Grafana request and send a message by a service:
 
 ```go

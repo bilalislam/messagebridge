@@ -20,4 +20,5 @@ type Body struct {
 	ImageURL    string                   `json:"imageUrl"`
 	Message     string                   `json:"message"`
 	EvalMatches []map[string]interface{} `json:"evalMatches"`
+	Type        string
 }

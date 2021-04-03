@@ -32,7 +32,7 @@ func main() {
 
 	env := os.Getenv("ENV_FILE")
 	var port string
-	if env == "" || env == "dev" {
+	if env == "" || env == "development" {
 		port = "8080"
 	} else {
 		port = "80"

@@ -1,7 +1,6 @@
 package contracts
 
 type HubConfiguration struct {
-	Name                string              `json:"Name"`
 	BrokerConfiguration BrokerConfiguration `json:"BrokerConfiguration"`
 }
 
