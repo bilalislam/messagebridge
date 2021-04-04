@@ -12,14 +12,15 @@ type State string
 
 // Body represents Grafana request body
 type BridgeMessageContract struct {
-	Title       string                   `json:"title"`
-	RuleID      int                      `json:"ruleId"`
-	RuleName    string                   `json:"ruleName"`
-	RuleURL     string                   `json:"ruleUrl"`
-	State       State                    `json:"state"`
-	ImageURL    string                   `json:"imageUrl"`
-	Message     string                   `json:"message"`
-	EvalMatches []map[string]interface{} `json:"evalMatches"`
-	Type        string
-	RoutingKey  string
+	Title         string                   `json:"title"`
+	RuleID        int                      `json:"ruleId"`
+	RuleName      string                   `json:"ruleName"`
+	RuleURL       string                   `json:"ruleUrl"`
+	State         State                    `json:"state"`
+	ImageURL      string                   `json:"imageUrl"`
+	Message       string                   `json:"message"`
+	EvalMatches   []map[string]interface{} `json:"evalMatches"`
+	Type          string
+	RoutingKey    string
+	CorrelationId string
 }

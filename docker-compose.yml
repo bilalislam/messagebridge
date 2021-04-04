@@ -1,14 +1,14 @@
 version: '3'
 
 services:
-  messagebridge:
-    build:
-      context: .
-      dockerfile: tools/docker/Dockerfile
-    ports:
-      - "8080:8080"
-    environment:
-      ENV_FILE: development
+#  messagebridge:
+#    build:
+#      context: .
+#      dockerfile: tools/docker/Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      ENV_FILE: development
 
   rabbitmq:
     image: rabbitmq:3.8.14-management

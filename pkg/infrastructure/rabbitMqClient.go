@@ -23,21 +23,22 @@ func NewRabbitMqClient(logger *zap.Logger) *RabbitMqClient {
 
 func (rabbitMqClient *RabbitMqClient) Publish(
 	brokerConfiguration *contracts.BrokerConfiguration,
-	message interface{}) {
+	message interface{},
+	correlationId string) {
 
 	environment := os.Getenv("ENV_FILE")
-	if len(environment) == 0 {
+	if len(environment) == 0 || environment == "dev" {
 		environment = "development"
 	}
 
 	routingKey := brokerConfiguration.RoutingKey + "-" + environment
 
-	rabbitMqClient.logger.Info(fmt.Sprintf("[RABBITMQ] connection trying to create to bus [Broker-RoutingKey]: %s", routingKey))
+	rabbitMqClient.logger.Info(fmt.Sprintf("[RABBITMQ] connection trying to create to bus [Broker-RoutingKey]: %s", routingKey), zap.String("fields.CorrelationId", correlationId))
 
 	node := chooseRandomNode(brokerConfiguration.Nodes)
 	connection, err := amqp.Dial(node)
 	if err != nil {
-		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not be create a connection to bus [Error]: %s", err.Error()))
+		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not be create a connection to bus [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 
 		return
 	}
@@ -45,7 +46,7 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 
 	channel, err := connection.Channel()
 	if err != nil {
-		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not be create a channel in bus  [Error]: %s", err.Error()))
+		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not be create a channel in bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 		return
 	}
 	defer channel.Close()
@@ -60,17 +61,17 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 		nil,
 	)
 	if err != nil {
-		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not decleare an exchange in bus  [Error]: %s", err.Error()))
+		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not decleare an exchange in bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 		return
 	}
 
 	if err := channel.Confirm(false); err != nil {
-		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] channel could not be put into confirm mode in bus  [Error]: %s", err.Error()))
+		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] channel could not be put into confirm mode in bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 	}
 
 	data, err := json.Marshal(message)
 	if err != nil {
-		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] message could not be converted to verified format <tips: []byte> [Error]: %s", err.Error()))
+		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] message could not be converted to verified format <tips: []byte> [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 		return
 	}
 	err = channel.Publish(
@@ -86,20 +87,20 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 		})
 
 	if err != nil {
-		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] message could not published to bus  [Error]: %s", err.Error()))
+		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] message could not published to bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 	}
 
-	rabbitMqClient.logger.Info(fmt.Sprint("[RABBITMQ] message published to bus "))
+	rabbitMqClient.logger.Info(fmt.Sprint("[RABBITMQ] message published to bus "), zap.String("fields.CorrelationId", correlationId))
 }
 
 func chooseRandomNode(nodes []string) string {
-	defaultNode := nodes[0]
+	//defaultNode := nodes[0]
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(nodes), func(i, j int) { nodes[i], nodes[j] = nodes[j], nodes[i] })
 
-	if defaultNode == nodes[0] {
-		return nodes[1]
-	}
+	//if defaultNode == nodes[0] {
+	//	return nodes[1]
+	//}
 
 	return nodes[0]
 }
