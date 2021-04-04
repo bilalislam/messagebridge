@@ -24,7 +24,7 @@ func NewRabbitMqClient(logger *zap.Logger) *RabbitMqClient {
 func (rabbitMqClient *RabbitMqClient) Publish(
 	brokerConfiguration *contracts.BrokerConfiguration,
 	message interface{},
-	correlationId string) {
+	correlationId string) error {
 
 	environment := os.Getenv("ENV_FILE")
 	if len(environment) == 0 || environment == "dev" {
@@ -40,14 +40,14 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 	if err != nil {
 		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not be create a connection to bus [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
 
-		return
+		return err
 	}
 	defer connection.Close()
 
 	channel, err := connection.Channel()
 	if err != nil {
 		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not be create a channel in bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
-		return
+		return err
 	}
 	defer channel.Close()
 
@@ -62,7 +62,7 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 	)
 	if err != nil {
 		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] could not decleare an exchange in bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
-		return
+		return err
 	}
 
 	if err := channel.Confirm(false); err != nil {
@@ -72,7 +72,7 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 	data, err := json.Marshal(message)
 	if err != nil {
 		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] message could not be converted to verified format <tips: []byte> [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
-		return
+		return err
 	}
 	err = channel.Publish(
 		brokerConfiguration.ExchangeName,
@@ -88,9 +88,11 @@ func (rabbitMqClient *RabbitMqClient) Publish(
 
 	if err != nil {
 		rabbitMqClient.logger.Error(fmt.Sprintf("[RABBITMQ] message could not published to bus  [Error]: %s", err.Error()), zap.String("fields.CorrelationId", correlationId))
+		return err
 	}
 
 	rabbitMqClient.logger.Info(fmt.Sprint("[RABBITMQ] message published to bus "), zap.String("fields.CorrelationId", correlationId))
+	return nil
 }
 
 func chooseRandomNode(nodes []string) string {

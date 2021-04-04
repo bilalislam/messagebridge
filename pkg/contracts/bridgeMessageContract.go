@@ -10,7 +10,7 @@ const (
 
 type State string
 
-// Body represents Grafana request body
+// swagger:parameters BridgeMessageContract
 type BridgeMessageContract struct {
 	Title         string                   `json:"title"`
 	RuleID        int                      `json:"ruleId"`

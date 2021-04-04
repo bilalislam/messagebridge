@@ -1,0 +1,77 @@
+basePath: /
+definitions:
+  contracts.BridgeMessageContract:
+    properties:
+      correlationId:
+        type: string
+      evalMatches:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      imageUrl:
+        type: string
+      message:
+        type: string
+      routingKey:
+        type: string
+      ruleId:
+        type: integer
+      ruleName:
+        type: string
+      ruleUrl:
+        type: string
+      state:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: noctools@turknet.net.tr
+    name: noc-tools engineering team
+  description: This is a webhook for grafana
+  title: Message Bridge API
+  version: "1.0"
+paths:
+  /health-check:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+  /process:
+    post:
+      consumes:
+      - application/json
+      description: Process event message with the input payload
+      parameters:
+      - description: Process Alert
+        in: body
+        name: bridgeMessageContract
+        required: true
+        schema:
+          $ref: '#/definitions/contracts.BridgeMessageContract'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Process a new alert message
+schemes:
+- http
+swagger: "2.0"

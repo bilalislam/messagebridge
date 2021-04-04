@@ -20,14 +20,13 @@ func NewSendAnakinHub(logger *zap.Logger, rabbitMqClient *infrastructure.RabbitM
 }
 
 func (hub *SendAnakinHub) Transmit(message *contracts.BridgeMessageContract, hubConfiguration *contracts.HubConfiguration) error {
-	hub.rabbitMqClient.Publish(&hubConfiguration.BrokerConfiguration, &AnakinCommand{
+	return hub.rabbitMqClient.Publish(&hubConfiguration.BrokerConfiguration, &AnakinCommand{
 		message.Message,
 		message.Title,
 		message.State,
 		message.CorrelationId,
 		time.Now(),
 	}, message.CorrelationId)
-	return nil
 }
 
 type AnakinCommand struct {

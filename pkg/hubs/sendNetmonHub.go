@@ -20,14 +20,13 @@ func NewSendNetmonHub(logger *zap.Logger, rabbitMqClient *infrastructure.RabbitM
 }
 
 func (hub *SendNetmonHub) Transmit(message *contracts.BridgeMessageContract, hubConfiguration *contracts.HubConfiguration) error {
-	hub.rabbitMqClient.Publish(&hubConfiguration.BrokerConfiguration, &NetmonCommand{
+	return hub.rabbitMqClient.Publish(&hubConfiguration.BrokerConfiguration, &NetmonCommand{
 		message.Message,
 		message.Title,
 		message.State,
 		message.CorrelationId,
 		time.Now(),
 	}, message.CorrelationId)
-	return nil
 }
 
 type NetmonCommand struct {

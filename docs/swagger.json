@@ -1,0 +1,116 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a webhook for grafana",
+        "title": "Message Bridge API",
+        "contact": {
+            "name": "noc-tools engineering team",
+            "email": "noctools@turknet.net.tr"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/health-check": {
+            "get": {
+                "description": "get the status of server.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Show the status of server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/process": {
+            "post": {
+                "description": "Process event message with the input payload",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Process a new alert message",
+                "parameters": [
+                    {
+                        "description": "Process Alert",
+                        "name": "bridgeMessageContract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contracts.BridgeMessageContract"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "contracts.BridgeMessageContract": {
+            "type": "object",
+            "properties": {
+                "correlationId": {
+                    "type": "string"
+                },
+                "evalMatches": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "routingKey": {
+                    "type": "string"
+                },
+                "ruleId": {
+                    "type": "integer"
+                },
+                "ruleName": {
+                    "type": "string"
+                },
+                "ruleUrl": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
