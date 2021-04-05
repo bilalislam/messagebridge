@@ -8,7 +8,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      ENV_FILE: development
+      ENV_FILE: dev
+    depends_on:
+      - rabbitmq
+      - grafana
+
 
   rabbitmq:
     image: rabbitmq:3.8.14-management
